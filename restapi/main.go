@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/xid"
 )
 
 //Book
@@ -100,7 +101,7 @@ func createBook(responseWriter http.ResponseWriter, request *http.Request) {
 	responseWriter.Header().Set("Content-Type", "application/json")
 	var newBook Book
 	_ = json.NewDecoder(request.Body).Decode(&newBook)
-	newBook.Id = strconv.Itoa(idGenerator())
+	newBook.Id = strconv.Itoa(int(idGenerator()))
 	books = append(books, newBook)
 	json.NewEncoder(responseWriter).Encode(newBook)
 	writeToJson()
@@ -149,7 +150,7 @@ func main() {
 	//Add values to struct
 	json.Unmarshal(byteValue, &books)
 	defer jsonFile.Close()
-	idGenerator()
+
 	myRouter := mux.NewRouter().StrictSlash(true)
 
 	myRouter.HandleFunc("/api/books", getBooks).Methods("GET")
@@ -166,13 +167,8 @@ func writeToJson() {
 }
 
 func idGenerator() int {
-	//To get the id of last item
-	var lastBook Book = books[len(books)-1]
-	// guid := xid.New()
-	// println(guid.Counter())
-	if IdNum, err := strconv.Atoi(lastBook.Id); err == nil {
-		return IdNum + 1
-	}
-	return 0
+
+	guid := xid.New()
+	return int(guid.Counter())
 
 }

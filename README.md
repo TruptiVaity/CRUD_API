@@ -18,9 +18,9 @@ API consists of following criteria:
 - An endpoint to update an item: updateBook.
 - An endpoint to delete an item: deleteBook.
 
-This API collects the data from a JSON file "books.json".
+This API collects the data from a JSON file "books.json". (For testing purposes, ID's from the books.json file can be used to verify "getBook, updateBook and deleteBook" functions)
 
-Create new book entry: Takes the input. Increments the ID, and allocates it to the new item.
+Create new book entry: Takes the input. A default ID is created using the Counter method from Package xid which is a globally unique id generator library. 
 
 Update a book: Find the match for the requested Id and update its parameters and send response.
 
