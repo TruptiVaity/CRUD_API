@@ -39,9 +39,13 @@ Instructions to Run the project:
 9. Update an item: http://localhost:8081/api/books/{id} (PUT)
 10. Delete an item: http://localhost:8081/api/books/{id} (DELETE)
 11. Filter Query(GET): 
-	a. Check if the data contains books by entered author: e.g. http://localhost:8081/api/books?author="author"
-	b. Check if the data contains books with entered title: e.g. http://localhost:8081/api/books?author="title"
-	c. List all the books with prices less than the entered price: e.g. http://localhost:8081/api/books?price="150"
-	d. Can apply more than one filter at a time: e.g. http://localhost:8081/api/books?author="author"&price="150
+	
+    a. Check if the data contains books by entered author: e.g. http://localhost:8081/api/books?author="author"
+	
+    b. Check if the data contains books with entered title: e.g. http://localhost:8081/api/books?author="title"
+	
+    c. List all the books with prices less than the entered price: e.g. http://localhost:8081/api/books?price="150"
+	
+    d. Can apply more than one filter at a time: e.g. http://localhost:8081/api/books?author="author"&price="150
 												      http://localhost:8081/api/books?author="author"&price="150&title="title"
 
