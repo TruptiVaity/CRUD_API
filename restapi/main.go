@@ -27,18 +27,18 @@ var books []Book
 var IdNum int
 
 //Get All Books
-func getBooks(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+func getBooks(responseWriter http.ResponseWriter, request *http.Request) {
+	responseWriter.Header().Set("Content-Type", "application/json")
 
-	query := r.URL.Query()
+	query := request.URL.Query()
 	author := query.Get("author")
 	title := query.Get("title")
 	price := query.Get("price")
 
 	if len(price) != 0 || len(author) != 0 || len(title) != 0 {
-		json.NewEncoder(w).Encode(filterByQuery(title, author, price))
+		json.NewEncoder(responseWriter).Encode(filterByQuery(title, author, price))
 	} else {
-		json.NewEncoder(w).Encode(books)
+		json.NewEncoder(responseWriter).Encode(books)
 	}
 }
 
@@ -72,67 +72,62 @@ func checkNumber(searchedNumber, checkWith string) bool {
 }
 
 //Get Single Book
-func getBook(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	params := mux.Vars(r) //Get Params
+func getBook(responseWriter http.ResponseWriter, request *http.Request) {
+	responseWriter.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(request) //Get Params
 	//Loop through books to find id
 	for i := 0; i < len(books); i++ {
 		if books[i].Id == params["id"] {
-			json.NewEncoder(w).Encode(books[i])
+			json.NewEncoder(responseWriter).Encode(books[i])
 			return
 		}
 	}
-	json.NewEncoder(w).Encode(&Book{})
+	json.NewEncoder(responseWriter).Encode(&Book{})
 }
 
 //Create a new book
-func createBook(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+func createBook(responseWriter http.ResponseWriter, request *http.Request) {
+	responseWriter.Header().Set("Content-Type", "application/json")
 	var newBook Book
-	_ = json.NewDecoder(r.Body).Decode(&newBook)
+	_ = json.NewDecoder(request.Body).Decode(&newBook)
 	IdNum += 1
 	newBook.Id = strconv.Itoa(IdNum)
 	books = append(books, newBook)
-	json.NewEncoder(w).Encode(newBook)
+	json.NewEncoder(responseWriter).Encode(newBook)
 	writeToJson()
 }
 
 //Update a book
-func updateBook(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	params := mux.Vars(r)
+func updateBook(responseWriter http.ResponseWriter, request *http.Request) {
+	responseWriter.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(request)
 	for i := 0; i < len(books); i++ {
 		if books[i].Id == params["id"] {
-			//Slicing through and removing that index
-			books = append(books[:i], books[i+1:]...)
-			var secondHalf []Book
-			secondHalf = append(secondHalf, books[i:]...)
-			var updatedbook Book
-			_ = json.NewDecoder(r.Body).Decode(&updatedbook)
-			updatedbook.Id = params["id"]
-			//Slicing through and adding updated book to removed index
-			books = append(append(books[:i], updatedbook), secondHalf...)
-			json.NewEncoder(w).Encode(updatedbook)
+			books[i].Author = params["author"]
+			books[i].Title = params["title"]
+			books[i].Price = params["price"]
+			_ = json.NewDecoder(request.Body).Decode(&books[i])
+			json.NewEncoder(responseWriter).Encode(books[i])
 			writeToJson()
 			return
 		}
 	}
-	json.NewEncoder(w).Encode(books)
+	json.NewEncoder(responseWriter).Encode(books)
 }
 
 //Delete a book
-func deleteBook(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	params := mux.Vars(r)
+func deleteBook(responseWriter http.ResponseWriter, request *http.Request) {
+	responseWriter.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(request)
 	for index, item := range books {
 		if item.Id == params["id"] {
 			//Slicing through and removing that index
 			books = append(books[:index], books[index+1:]...)
 			writeToJson()
-			break
+			return
 		}
 	}
-	json.NewEncoder(w).Encode(books)
+	json.NewEncoder(responseWriter).Encode(books)
 }
 
 func main() {
@@ -146,14 +141,11 @@ func main() {
 	json.Unmarshal(byteValue, &books)
 	defer jsonFile.Close()
 
-	//To get the max id present
-	for _, item := range books {
-		if maxid, err := strconv.Atoi(item.Id); err == nil {
-			if maxid > IdNum {
-				IdNum = maxid
-			}
+	//To get the id of last item
+	var lastBook Book = books[len(books)-1]
 
-		}
+	if maxId, err := strconv.Atoi(lastBook.Id); err == nil {
+		IdNum = maxId
 	}
 
 	myRouter := mux.NewRouter().StrictSlash(true)
