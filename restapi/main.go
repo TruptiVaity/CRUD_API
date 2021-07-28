@@ -166,9 +166,14 @@ func writeToJson() {
 	ioutil.WriteFile("books.json", file, 0644)
 }
 
-func idGenerator() int {
-
+func idGenerator() int32 {
+	//To get the id of last item
+	// var lastBook Book = books[len(books)-1]
 	guid := xid.New()
-	return int(guid.Counter())
+	println(guid.Counter())
+	// if IdNum, err := strconv.Atoi(lastBook.Id); err == nil {
+	// 	return IdNum + 1
+	// }
+	return guid.Counter()
 
 }

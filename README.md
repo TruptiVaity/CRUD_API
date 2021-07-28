@@ -20,7 +20,7 @@ API consists of following criteria:
 
 This API collects the data from a JSON file "books.json". (For testing purposes, ID's from the books.json file can be used to verify "getBook, updateBook and deleteBook" functions)
 
-Create new book entry: Takes the input. A default ID is created using the Counter method from Package xid which is a globally unique id generator library. 
+Create new book entry: Takes the input. A unique ID is created using the Counter method from Package xid which is a globally unique id generator library. 
 
 Update a book: Find the match for the requested Id and update its parameters and send response.
 
