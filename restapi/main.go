@@ -48,9 +48,9 @@ func filterByQuery(title, author, price string) []Book {
 	for i := 0; i < len(books); i++ {
 
 		var currentBook Book = books[i]
-		if (len(author) == 0 || checkStrings(author, currentBook.Author)) &&
-			(len(title) == 0 || checkStrings(title, currentBook.Title)) &&
-			(len(price) == 0 || checkNumber(price, currentBook.Price)) {
+		if filterByAuthor(author, currentBook) &&
+			filterByTitle(title, currentBook) &&
+			filterByPrice(price, currentBook) {
 			filteredBooks = append(filteredBooks, currentBook)
 		}
 
@@ -58,14 +58,24 @@ func filterByQuery(title, author, price string) []Book {
 	return filteredBooks
 }
 
+func filterByAuthor(searchedAuthor string, currentBook Book) bool {
+	return len(searchedAuthor) == 0 || checkStrings(searchedAuthor, currentBook.Author)
+}
+
+func filterByTitle(searchedTitle string, currentBook Book) bool {
+	return len(searchedTitle) == 0 || checkStrings(searchedTitle, currentBook.Title)
+}
+
 func checkStrings(searchedString, checkWith string) bool {
 	return strings.Contains(strings.ToLower(checkWith), strings.ToLower(searchedString))
 }
 
-func checkNumber(searchedNumber, checkWith string) bool {
-	if number, err := strconv.Atoi(searchedNumber); err == nil {
-		if bookPrice, err := strconv.Atoi(checkWith); err == nil {
-			return bookPrice <= number
+func filterByPrice(searchedPrice string, currentBook Book) bool {
+	if len(searchedPrice) != 0 {
+		if number, err := strconv.Atoi(searchedPrice); err == nil {
+			if bookPrice, err := strconv.Atoi(currentBook.Price); err == nil {
+				return bookPrice <= number
+			}
 		}
 	}
 	return false
@@ -90,8 +100,7 @@ func createBook(responseWriter http.ResponseWriter, request *http.Request) {
 	responseWriter.Header().Set("Content-Type", "application/json")
 	var newBook Book
 	_ = json.NewDecoder(request.Body).Decode(&newBook)
-	IdNum += 1
-	newBook.Id = strconv.Itoa(IdNum)
+	newBook.Id = strconv.Itoa(idGenerator())
 	books = append(books, newBook)
 	json.NewEncoder(responseWriter).Encode(newBook)
 	writeToJson()
@@ -140,14 +149,7 @@ func main() {
 	//Add values to struct
 	json.Unmarshal(byteValue, &books)
 	defer jsonFile.Close()
-
-	//To get the id of last item
-	var lastBook Book = books[len(books)-1]
-
-	if maxId, err := strconv.Atoi(lastBook.Id); err == nil {
-		IdNum = maxId
-	}
-
+	idGenerator()
 	myRouter := mux.NewRouter().StrictSlash(true)
 
 	myRouter.HandleFunc("/api/books", getBooks).Methods("GET")
@@ -161,4 +163,16 @@ func main() {
 func writeToJson() {
 	file, _ := json.MarshalIndent(books, "", "")
 	ioutil.WriteFile("books.json", file, 0644)
+}
+
+func idGenerator() int {
+	//To get the id of last item
+	var lastBook Book = books[len(books)-1]
+	// guid := xid.New()
+	// println(guid.Counter())
+	if IdNum, err := strconv.Atoi(lastBook.Id); err == nil {
+		return IdNum + 1
+	}
+	return 0
+
 }
