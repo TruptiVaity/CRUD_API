@@ -25,7 +25,6 @@ type Book struct {
 
 //Init books var as a slice Book
 var books []Book
-var IdNum int
 
 //Get All Books
 func getBooks(responseWriter http.ResponseWriter, request *http.Request) {
@@ -167,13 +166,7 @@ func writeToJson() {
 }
 
 func idGenerator() int32 {
-	//To get the id of last item
-	// var lastBook Book = books[len(books)-1]
 	guid := xid.New()
-	println(guid.Counter())
-	// if IdNum, err := strconv.Atoi(lastBook.Id); err == nil {
-	// 	return IdNum + 1
-	// }
 	return guid.Counter()
 
 }
