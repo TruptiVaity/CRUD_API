@@ -8,10 +8,15 @@ API consists of following criteria:
 - An endpoint to create a new item: createBook
 - An endpoint to read an item: getBook
 - An endpoint to read all items: getBooks
-	o Set this endpoint up 3 different query parameters used to filter the
-		books:  1. Filter books with Author name
-				2. Filter books with Title 
-				3. Filter books with price less than the entered value
+
+	o Set this endpoint up 3 different query parameters used to filter the books: 
+        
+        1. Filter books with Author name
+		
+        2. Filter books with Title 
+		
+        3. Filter books with price less than the entered value
+
 - An endpoint to update an item: updateBook.
 - An endpoint to delete an item: deleteBook.
 
@@ -46,6 +51,9 @@ Instructions to Run the project:
 	
     c. List all the books with prices less than the entered price: e.g. http://localhost:8081/api/books?price="150"
 	
-    d. Can apply more than one filter at a time: e.g. http://localhost:8081/api/books?author="author"&price="150
-												      http://localhost:8081/api/books?author="author"&price="150&title="title"
+    d. You can apply more than one filter at a time: 
+    
+    e.g. http://localhost:8081/api/books?author="author"&price="150
+		
+         http://localhost:8081/api/books?author="author"&price="150&title="title"
 
