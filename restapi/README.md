@@ -11,11 +11,9 @@ API consists of following criteria:
 
 	o Set this endpoint up 3 different query parameters used to filter the books: 
         
-        1. Filter books with Author name
-		
-        2. Filter books with Title 
-		
-        3. Filter books with price less than the entered value
+    1. Filter books with Author name		
+    2. Filter books with Title 
+    3. Filter books with price less than the entered value
 
 - An endpoint to update an item: updateBook.
 - An endpoint to delete an item: deleteBook.
@@ -32,10 +30,10 @@ Read All items:
 	If query is present, filter the books by query. Else return all the items present in the datastore.
 
 FilterByQuery:
-	1. Query with name "author" checks for the authors present in the datastore.
-	2. Query with name "title" checks for book titles.
-	3. Query with name "price" checks for all the books with less than or equal to the value entered by the user. 
-	4. Using more than one query at a time separated by "&" helps in narrowing your search results.
+1. Query with name "author" checks for the authors present in the datastore.
+2. Query with name "title" checks for book titles.
+3. Query with name "price" checks for all the books with less than or equal to the value entered by the user. 
+4. Using more than one query at a time separated by "&" helps in narrowing your search results.
 	
 Instructions to Run the project:
 1. Open command prompt
@@ -55,8 +53,5 @@ Instructions to Run the project:
 	
     c. List all the books with prices less than the entered price: e.g. http://localhost:8081/api/books?price="150"
 	
-    d. You can apply more than one filter at a time: 
-    
-    e.g. http://localhost:8081/api/books?author="author"&price="150
-		 http://localhost:8081/api/books?author="author"&price="150&title="title"
+    d. You can apply more than one filter at a time: e.g. http://localhost:8081/api/books?author="author"&price="150&title="title"
 
