@@ -36,6 +36,7 @@ func getBooks(responseWriter http.ResponseWriter, request *http.Request) {
 	price := query.Get("price")
 
 	if len(price) != 0 || len(author) != 0 || len(title) != 0 {
+
 		json.NewEncoder(responseWriter).Encode(filterByQuery(title, author, price))
 	} else {
 		json.NewEncoder(responseWriter).Encode(books)
@@ -48,13 +49,16 @@ func filterByQuery(title, author, price string) []Book {
 	for i := 0; i < len(books); i++ {
 
 		var currentBook Book = books[i]
+
 		if filterByAuthor(author, currentBook) &&
 			filterByTitle(title, currentBook) &&
 			filterByPrice(price, currentBook) {
+
 			filteredBooks = append(filteredBooks, currentBook)
 		}
 
 	}
+
 	return filteredBooks
 }
 
@@ -78,7 +82,7 @@ func filterByPrice(searchedPrice string, currentBook Book) bool {
 			}
 		}
 	}
-	return false
+	return true
 }
 
 //Get Single Book
@@ -152,6 +156,7 @@ func main() {
 
 	myRouter := mux.NewRouter().StrictSlash(true)
 
+	//Combine several matches in a route
 	myRouter.HandleFunc("/api/books", getBooks).Methods("GET")
 	myRouter.HandleFunc("/api/books/{id}", getBook).Methods("GET")
 	myRouter.HandleFunc("/api/books", createBook).Methods("POST")
